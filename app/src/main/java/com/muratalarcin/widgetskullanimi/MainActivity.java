@@ -5,11 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 
 import com.muratalarcin.widgetskullanimi.databinding.ActivityMainBinding;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
+    private boolean kontrol = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +51,35 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        binding.toggleButton.addOnButtonCheckedListener(((group, checkedId, isChecked) -> {//kotrol olmasa hata alabiliyoruz. buttona bastım, tekrar basınca seçim kalkıyor, ancak ben tekrar seçince bişiler bişiler
+            kontrol = isChecked;
+            if(kontrol) {
+                Button secilenButton = findViewById(binding.toggleButton.getCheckedButtonId());
+                String buttonYazi = secilenButton.getText().toString();
+                Log.e("Sonuç", buttonYazi);
+            }
+
+        }));
+
+        ArrayList<String> ulkeler = new ArrayList<>();
+        ulkeler.add("Türkiye");
+        ulkeler.add("İtalya");
+        ulkeler.add("Japonya");
+
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, ulkeler);
+        binding.autoTextView.setAdapter(arrayAdapter);
+
+        binding.textViewSlider.setText("Slider : " + binding.slider.getProgress());
+
         binding.buttonGoster.setOnClickListener(view -> {
             Log.e("Sonuç", "Switch Durum : " + binding.switch1.isChecked());
+            if(kontrol) {
+                Button secilenButton = findViewById(binding.toggleButton.getCheckedButtonId());
+                String buttonYazi = secilenButton.getText().toString();
+                Log.e("Sonuç", "Toggle Durum : " + buttonYazi);
+            }
+            String ulke = binding.autoTextView.getText().toString();
+            Log.e("Sonuç", "Ülke : " + ulke);
         });
 
     }
